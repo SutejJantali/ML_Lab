@@ -1,0 +1,29 @@
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import datasets
+
+iris_dataset = datasets.load_iris()
+print("IRIS dataset loaded")
+
+x_train, x_test, y_train, y_test = train_test_split(iris_dataset.data, iris_dataset.target, test_size=0.3)
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+for i in range(len(iris_dataset.target_names)):
+  print(i + 1, " ", str(iris_dataset.target_names[i]))
+  
+classifier = KNeighborsClassifier()
+classifier.fit(x_train, y_train)
+y_pred = classifier.predict(x_test)
+
+for i in range(len(y_pred)):
+  print("Sample:", str(x_test[i]))
+  print("Actual: ", str(y_test[i]))
+  print("Predicted: ", str(y_pred[i]))
+  
+from sklearn.metrics import accuracy_score
+print("Classification score : ", accuracy_score(y_pred, y_test) * 100)
+
+

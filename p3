@@ -1,0 +1,54 @@
+import numpy as np
+X = np.array(([2, 9], [1, 5], [3, 6]), dtype=float)
+Y = np.array(([92], [86], [89]), dtype=float)
+
+# Normalization
+X = X / np.amax(X, axis = 0)
+Y = Y / 100
+input_neurons = 2
+hidden_neurons = 3
+output_neurons = 1
+
+EPOCHS = 1000
+alpha = 0.2
+
+wij = np.random.uniform(size=(input_neurons, hidden_neurons))
+wjk = np.random.uniform(size=(hidden_neurons, output_neurons))
+bj = np.random.uniform(size=(1, hidden_neurons))
+bk = np.random.uniform(size=(1, output_neurons))
+
+def sigmoid(x):
+  return 1 / (1 + np.exp(-x))
+def sigmoid_grad(x):
+  return x * (1 - x)
+  
+# Training
+
+for e in range(EPOCHS):
+  print("\nEPOCH : ", e + 1, "/", EPOCHS)
+
+  # Feed Forward
+  print("Feeding inputs forward...")
+
+  yjin = np.dot(X, wij) + bj
+  yj = sigmoid(yjin)
+
+  ykin = np.dot(yj, wjk) + bk
+  yk = sigmoid(ykin)
+
+
+  # Back Propogation
+  print("Back propogating errors...")
+
+  deltak = (Y - yk) * sigmoid_grad(yk)
+  deltaj = deltak.dot(wjk.T) * sigmoid_grad(yj)
+
+  # Weight Updation
+  print("Updating weights...")
+
+  wij += X.T.dot(deltaj) * alpha
+  wjk += yj.T.dot(deltak) * alpha
+
+print("Normalized Input : ", X)
+print("Actual Output : ", Y)
+print("Predicted Output : ", yk)
